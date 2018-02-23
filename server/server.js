@@ -1,7 +1,9 @@
 let express = require('express');
-import Marketo from 'node-marketo-rest';
+let Marketo = require('node-marketo-rest');
+let marketoCredentials = require('../config');
 
-
+let ID = marketoCredentials.clientID;
+let secret = marketoCredentials.clientSecret;
 
 let app = express();
 
@@ -14,7 +16,7 @@ let app = express();
 
 
 
-
+console.log(secret, ID)
 
 
 
