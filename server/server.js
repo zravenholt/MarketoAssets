@@ -2,21 +2,29 @@ let express = require('express');
 let Marketo = require('node-marketo-rest');
 let marketoCredentials = require('../config');
 
-let ID = marketoCredentials.clientID;
-let secret = marketoCredentials.clientSecret;
-
 let app = express();
 
 
+let marketo = new Marketo({
+    endpoint: 'https://779-ZHH-801.mktorest.com/rest',
+    identity: 'https://779-ZHH-801.mktorest.com/identity',
+    clientId: marketoCredentials.clientID,
+    clientSecret: marketoCredentials.clientSecret
+  });
+
+
+let token = '';
+
+marketo.getOAuthToken().then((data) => {
+    token = data.access_token;
+    console.log('this is marketo oAuth token', token);
+})
 
 
 
 
 
 
-
-
-console.log(secret, ID)
 
 
 
