@@ -1,5 +1,6 @@
 let express = require('express');
 let Marketo = require('node-marketo-rest');
+let axios = require('axios');
 let marketoCredentials = require('../config');
 
 let app = express();
@@ -12,17 +13,46 @@ let marketo = new Marketo({
     clientSecret: marketoCredentials.clientSecret
   });
 
+let restAPI = marketo._connection._options.endpoint;
 
-let token = '';
+app.post('/api/postContent', (req, res) => {
 
-marketo.getOAuthToken().then((data) => {
-    token = data.access_token;
-    console.log('this is marketo oAuth token', token);
-})
+    marketo.getOAuthToken().then((data) => {
+        console.log('this is marketo oAuth token', data.access_token);
+        let landingPagesAPI = restAPI + '/asset/v1/landingPages.json';
+        let axiosConfig = {
+            headers: {
+                'Content-Type': 'application/json;charset=UTF-8',
+                'Access-Control-Allow-Origin': '*',
+                'Authorization': `Bearer ${data.access_token}`
+            }
+        }
+        axios.get(landingPagesAPI, axiosConfig)
+        .then((response) => {
+            console.log('axios complete:', response.data);
+        })
+        .catch((err) => {
+            console.log('Error caught in axios post: ', err);
+        });
+    });
+});
 
 
+//email template landing pages
+// let emailData = {
+//     folder: {
+//         id: 'integer id of the folder',
+//         type: 'Folder'
+//     },
+//     fromEmail: 'someone@somewhere.com',
+//     fromName: 'From this person',
+//     name: 'email name',
+//     replyEmail: 'replyToHere@somewhere.com',
+//     subject: 'subject line',
+//     template: 'integer of parent template',
 
-
+// };
+// let emailPath = restAPI + '/asset/v1/emails.json';
 
 
 
